@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PPAland | Platforma perwerdehiyê ya Alandê</title>
+  <meta name="description" content="منصة تعليمية لطلبة البكلوريا - PPAland">
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-inner">
+    <!-- Logo -->
+    <a href="index.html" class="logo-area">
+      <img src="logo.png" alt="منصة ألند">
+      PPAland
+    </a>
+
+    <!-- Nav -->
+    <nav class="site-nav" id="siteNav">
+      <a href="#home" data-lang="nav_home">الرئيسية</a>
+      <a href="#subjects" data-lang="nav_subjects">الأقسام</a>
+      <a href="#about" data-lang="nav_about">عن المنصة</a>
+    </nav>
+
+    <!-- Controls -->
+    <div class="header-controls">
+      <!-- Language Switcher -->
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang-btn data-lang="ar">عر</button>
+        <button class="lang-btn" data-lang-btn data-lang="ku">کو</button>
+      </div>
+
+      <!-- Theme Toggle -->
+      <button class="theme-toggle" title="تغيير الثيم" aria-label="toggle theme">
+        <span class="theme-icon">🌙</span>
+      </button>
+
+      <!-- Mobile Menu -->
+      <button class="menu-toggle" id="menuToggle" aria-label="menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <!-- Text -->
+    <div class="hero-text fade-up">
+      <div class="hero-badge">
+        🎓 <span data-lang="hero_subtitle">Platforma perwerdehiyê ya Alandê</span>
+      </div>
+
+      <h1 class="hero-title">
+         <span>PPAland</span>
+      </h1>
+
+      <p class="hero-subtitle" data-lang="hero_subtitle">Platforma perwerdehiyê ya Alandê</p>
+
+      <p class="hero-desc" data-lang="hero_desc">
+       في منصة (ئەلند)، لا نقدّم مجرد محتوى تعليمي… بل نصنع فرصة، ونبني مستقبلًا.
+نحن هنا لنكسر كل الحواجز التي تعيق الطالب، ونحوّل الفوضى التعليمية إلى طريق واضح نحو النجاح.
+      </p>
+
+      <a href="#subjects" class="hero-btn" data-lang="hero_btn">ابدأ الآن</a>
+
+      <!-- Stats -->
+      <div class="hero-stats" style="margin-top: 2.5rem;">
+        <div class="stat-item">
+          <div class="stat-num">9</div>
+          <div class="stat-label" data-lang="stat_subjects">مادة دراسية</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">5+</div>
+          <div class="stat-label" data-lang="stat_resources">مصدر تعليمي</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label" data-lang="stat_free">مجاناً بالكامل</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo -->
+    <div class="hero-logo-area fade-up fade-up-2">
+      <div class="hero-logo-wrap">
+        <div class="hero-logo-ring"></div>
+        <img src="logo.png" alt="STS GROUP" class="hero-logo-img">
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gold-divider">
+
+<!-- ===== SUBJECTS ===== -->
+<section class="section subjects-section" id="subjects">
+  <div class="section-inner">
+    <div class="section-header fade-up">
+      <div class="section-label">📚</div>
+      <h2 class="section-title" data-lang="sec_subjects">الأقسام الدراسية</h2>
+      <p class="section-subtitle" data-lang="sec_subjects_sub">اختر المادة التي تريد دراستها</p>
+    </div>
+
+    <div class="subjects-grid">
+      <div class="subject-card fade-up" onclick="goToSubject('biology')">
+        <div class="subject-icon">🔬</div>
+        <div class="subject-name" data-lang="subj_biology">الأحياء</div>
+        <div class="subject-desc" data-lang="subj_biology_desc">كتب، شروحات، وزاريات</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+
+      <div class="subject-card fade-up fade-up-2" onclick="goToSubject('math')">
+        <div class="subject-icon">📐</div>
+        <div class="subject-name" data-lang="subj_math">الرياضيات</div>
+        <div class="subject-desc" data-lang="subj_math_desc">كتب، شروحات، وزاريات</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+
+      <div class="subject-card fade-up fade-up-3" onclick="goToSubject('physics')">
+        <div class="subject-icon">⚡</div>
+        <div class="subject-name" data-lang="subj_physics">الفيزياء</div>
+        <div class="subject-desc" data-lang="subj_physics_desc">كتب، شروحات، وزاريات</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+
+      <div class="subject-card fade-up fade-up-4" onclick="goToSubject('chemistry')">
+        <div class="subject-icon">🧪</div>
+        <div class="subject-name" data-lang="subj_chemistry">الكيمياء</div>
+        <div class="subject-desc" data-lang="subj_chemistry_desc">كتب، شروحات، وزاريات</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+
+      <div class="subject-card fade-up" onclick="goToSubject('arabic')">
+        <div class="subject-icon">✍️</div>
+        <div class="subject-name" data-lang="subj_arabic">اللغة العربية</div>
+        <div class="subject-desc" data-lang="subj_arabic_desc">كتب، شروحات، وزاريات</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+
+      <div class="subject-card fade-up fade-up-2" onclick="goToSubject('english')">
+        <div class="subject-icon">🌐</div>
+        <div class="subject-name" data-lang="subj_english">اللغة الإنجليزية</div>
+        <div class="subject-desc" data-lang="subj_english_desc">كتب، شروحات، وزاريات</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+
+      <div class="subject-card fade-up fade-up-3" onclick="goToSubject('kurdish')">
+        <div class="subject-icon">📖</div>
+        <div class="subject-name" data-lang="subj_kurdish">اللغة الكوردية</div>
+        <div class="subject-desc" data-lang="subj_kurdish_desc">كتب، شروحات، وزاريات</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+
+      <div class="subject-card fade-up fade-up-4" onclick="goToSubject('islam')">
+        <div class="subject-icon">🌙</div>
+        <div class="subject-name" data-lang="subj_islam">التربية الإسلامية</div>
+        <div class="subject-desc" data-lang="subj_islam_desc">كتب، أسئلة، وزاريات</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+
+      <div class="subject-card fade-up" onclick="goToSubject('average')">
+        <div class="subject-icon">📊</div>
+        <div class="subject-name" data-lang="subj_average">المعدلات</div>
+        <div class="subject-desc" data-lang="subj_average_desc">حساب المعدل التراكمي</div>
+        <div class="subject-arrow">◀</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gold-divider">
+
+<!-- ===== ABOUT ===== -->
+<section class="section about-section" id="about">
+  <div class="section-inner">
+    <div class="section-header fade-up">
+      <div class="section-label">💡</div>
+      <h2 class="section-title" data-lang="sec_about">عن المجموعة</h2>
+    </div>
+
+    <div class="about-card fade-up">
+      <h3 style="font-size:1.3rem;font-weight:800;color:var(--gold);margin-bottom:1.25rem;" data-lang="about_title">
+        Platforma perwerdehiyê ya Alandê
+      </h3>
+
+      <p class="about-text" data-lang="about_p1">
+        مبادرة تعليمية غير ربحية تضم فريقًا متميزًا من المهندسين، والطلاب الجامعيين، ونخبة من أساتذة الصف الثاني عشر (مرحلة البكلوريا).
+      </p>
+
+      <p class="about-text" data-lang="about_p2">
+        تهدف المبادرة إلى دعم طلبة البكلوريا من خلال مساعدتهم على تنظيم دراستهم، وتوفير مصادر تعليمية موثوقة ومتكاملة، تُقدَّم بأسلوب أكاديمي واضح ومنهجي.
+      </p>
+
+      <p class="about-text" data-lang="about_p3">
+        نؤمن في STS GROUP بأن النجاح الدراسي هو ثمرة خطوات صغيرة وثابتة، ومن هذا المنطلق نعمل على توفير الكتب المعتمدة، الملازم الدراسية، الشروحات، أسئلة المدرسين، والامتحانات الوزارية ضمن بيئة تعليمية بسيطة وسهلة الاستخدام.
+      </p>
+
+      <div class="about-quote" data-lang="about_quote">
+        «خير الناس أنفعهم للناس»
+      </div>
+
+      <p class="about-text" data-lang="about_p4">
+        نحرص على تقديم العلم والمعرفة دون مقابل، سعيًا لنشر الفائدة ودعم الطلبة في مسيرتهم التعليمية، بروح العطاء والمسؤولية المجتمعية.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  © 2025 <span>PPAland</span> – <span data-lang="footer_rights">جميع الحقوق محفوظة</span>
+</footer>
+
+<script src="js/lang.js"></script>
+<script src="js/theme.js"></script>
+<script>
+  // Navigate to subject with lang param
+  function goToSubject(subj) {
+    const lang = LangManager.current;
+    window.location.href = `subjects/${subj}.html?lang=${lang}`;
+  }
+
+  // Theme icon update
+  function updateThemeIcon() {
+    const icon = document.querySelector('.theme-icon');
+    if (icon) icon.textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+  }
+
+  document.querySelector('.theme-toggle')?.addEventListener('click', updateThemeIcon);
+  updateThemeIcon();
+
+  // Mobile nav
+  document.getElementById('menuToggle')?.addEventListener('click', () => {
+    document.getElementById('siteNav').classList.toggle('open');
+  });
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = '1'; });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
