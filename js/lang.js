@@ -151,10 +151,10 @@ const translations = {
 
 // ===== Language Manager =====
 const LangManager = {
-  current: localStorage.getItem('PPAland_lang') || 'ar',
+  current: localStorage.getItem('PPAland_lang') || 'ku',
 
   get(key) {
-    return translations[this.current][key] || translations['ar'][key] || key;
+    return translations[this.current][key] || translations['ku'][key] || key;
   },
 
   set(lang) {
