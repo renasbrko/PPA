@@ -1,6 +1,6 @@
 // ===== Theme Manager =====
 const ThemeManager = {
-  current: localStorage.getItem('sts_theme') || 'dark',
+  current: localStorage.getItem('PPAland_theme') || 'dark',
 
   apply() {
     if (this.current === 'dark') {
@@ -16,7 +16,7 @@ const ThemeManager = {
 
   toggle() {
     this.current = this.current === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('sts_theme', this.current);
+    localStorage.setItem('PPAland_theme', this.current);
     this.apply();
   },
 
