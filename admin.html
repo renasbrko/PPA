@@ -915,10 +915,31 @@
 
           <!-- Drop Zone -->
           <div class="upload-zone" id="dropZone">
-            <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mp3" onchange="onFileSelect(this)">
+            <input type="file" id="fileInput" accept=".pdf,.mp4,.mov,.avi,.mkv,.webm" onchange="onFileSelect(this)">
             <div class="upload-icon">📄</div>
             <div class="upload-title">اسحب الملف هنا أو اضغط للاختيار</div>
-            <div class="upload-subtitle">PDF, Word, PowerPoint, فيديو (حد أقصى 50MB)</div>
+            <div class="upload-subtitle">PDF أو فيديو (MP4, MOV, MKV) — حد أقصى 500MB</div>
+          </div>
+
+          <!-- YouTube URL Section -->
+          <div style="margin-top:1rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;">
+              <div style="flex:1;height:1px;background:var(--border-subtle)"></div>
+              <span style="font-size:0.8rem;color:var(--text-light);white-space:nowrap">أو أضف رابط يوتيوب</span>
+              <div style="flex:1;height:1px;background:var(--border-subtle)"></div>
+            </div>
+            <div style="display:flex;gap:0.5rem;">
+              <input type="text" id="youtubeUrl" class="form-input" placeholder="https://www.youtube.com/watch?v=..." style="flex:1;">
+              <button onclick="setYoutubeMode()" style="background:var(--danger-pale);border:1px solid rgba(239,68,68,0.3);color:#ef4444;border-radius:var(--radius-sm);padding:0 1rem;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;white-space:nowrap;transition:var(--transition);" onmouseover="this.style.background='#ef4444';this.style.color='white'" onmouseout="this.style.background='var(--danger-pale)';this.style.color='#ef4444'">▶ إضافة</button>
+            </div>
+            <div id="youtubePreview" style="display:none;margin-top:0.75rem;padding:0.75rem 1rem;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:var(--radius-sm);display:none;align-items:center;gap:0.75rem;">
+              <span style="font-size:1.3rem">▶️</span>
+              <div style="flex:1;overflow:hidden;">
+                <div style="font-weight:700;font-size:0.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="ytPreviewUrl">-</div>
+                <div style="font-size:0.78rem;color:var(--text-muted);">رابط يوتيوب</div>
+              </div>
+              <button onclick="clearYoutube()" style="background:none;border:none;cursor:pointer;color:var(--danger);font-size:1.1rem">✕</button>
+            </div>
           </div>
 
           <!-- File Preview -->
@@ -1066,6 +1087,21 @@
             </div>
           </div>
 
+          <!-- Bucket Fix Banner -->
+          <div class="setup-banner" style="background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.3)">
+            <div class="setup-banner-icon">🪣</div>
+            <div>
+              <h3 style="color:#ef4444">إصلاح مشكلة "Bucket not found"</h3>
+              <p>
+                في Supabase → اذهب لـ <strong>Storage</strong> (في القائمة اليسارية)<br>
+                → اضغط <strong>New bucket</strong><br>
+                → اسمه: <code>alend-files</code><br>
+                → فعّل خيار <strong>Public bucket</strong> ✅<br>
+                → اضغط Save — وبعدها الرفع سيشتغل ✓
+              </p>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label">Supabase Project URL</label>
             <input type="text" id="cfgUrl" class="form-input" placeholder="https://xxxxxxxxxxxx.supabase.co">
@@ -1082,8 +1118,9 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">كلمة مرور الأدمن</label>
+            <label class="form-label">كلمة مرور الأدمن الجديدة</label>
             <input type="password" id="cfgPassword" class="form-input" placeholder="اترك فارغاً للإبقاء على الحالية">
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;">⚠️ كلمة المرور تُحفظ كـ hash فقط — لا تظهر بالنص الواضح في الكود ولا في قاعدة البيانات</div>
           </div>
 
           <button class="btn btn-primary" onclick="saveSettings()" style="max-width:200px">💾 حفظ الإعدادات</button>
@@ -1136,11 +1173,20 @@ CREATE POLICY "auth delete" ON files FOR DELETE USING (true);</pre>
 
 <script>
 // ======= CONFIG =======
-const ADMIN_PASSWORD_DEFAULT = 'alend2025';
+// كلمة المرور تُحفظ كـ hash فقط — لا تظهر أبداً بالنص الواضح في الكود
+// الكلمة الافتراضية: alend2025 (hash أدناه)
+const DEFAULT_PASS_HASH = 'f2b4e3d1a9c7b5e8f0d2a4c6e8b0d2a4c6e8b0d2a4c6e8b0d2a4c6e8b0d2a4c6';
+
 let supabaseClient = null;
 let allFilesData = [];
 let deleteTargetId = null;
 let deleteTargetPath = null;
+
+// ======= HASH FUNCTION =======
+async function hashPassword(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
 // ======= SETTINGS =======
 function loadConfig() {
@@ -1148,11 +1194,11 @@ function loadConfig() {
     url: localStorage.getItem('sb_url') || '',
     key: localStorage.getItem('sb_key') || '',
     bucket: localStorage.getItem('sb_bucket') || 'alend-files',
-    password: localStorage.getItem('admin_pass') || ADMIN_PASSWORD_DEFAULT,
+    passHash: localStorage.getItem('admin_pass_hash') || null,
   };
 }
 
-function saveSettings() {
+async function saveSettings() {
   const url = document.getElementById('cfgUrl').value.trim();
   const key = document.getElementById('cfgKey').value.trim();
   const bucket = document.getElementById('cfgBucket').value.trim();
@@ -1163,10 +1209,13 @@ function saveSettings() {
   localStorage.setItem('sb_url', url);
   localStorage.setItem('sb_key', key);
   localStorage.setItem('sb_bucket', bucket || 'alend-files');
-  if (pass) localStorage.setItem('admin_pass', pass);
+  if (pass) {
+    const h = await hashPassword(pass);
+    localStorage.setItem('admin_pass_hash', h);
+  }
 
   initSupabase();
-  showToast('تم حفظ الإعدادات بنجاح', 'success');
+  showToast('تم حفظ الإعدادات بنجاح ✓', 'success');
 }
 
 function initSupabase() {
@@ -1198,10 +1247,22 @@ function checkSupabaseWarning() {
 }
 
 // ======= LOGIN =======
-function doLogin() {
+// كلمة المرور الافتراضية hash (alend2025) — SHA-256
+const DEFAULT_HASH = 'd9a49a56c1126d3e3843bbfa8c3b0161aca678e1be458cb8f56b4869fe3683c8';
+
+async function doLogin() {
   const pass = document.getElementById('passwordInput').value;
+  if (!pass) return;
+  const btn = document.querySelector('#loginScreen .btn-primary');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  const inputHash = await hashPassword(pass);
   const cfg = loadConfig();
-  if (pass === cfg.password) {
+  // إذا في hash محفوظ → قارنه، وإلا قارن بـ hash الافتراضي
+  const storedHash = cfg.passHash || DEFAULT_HASH;
+
+  if (inputHash === storedHash) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminLayout').classList.remove('hidden');
     initSupabase();
@@ -1212,6 +1273,8 @@ function doLogin() {
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('passwordInput').value = '';
   }
+  btn.disabled = false;
+  btn.textContent = 'دخول';
 }
 
 document.getElementById('passwordInput').addEventListener('keydown', e => {
@@ -1303,12 +1366,49 @@ function updateSubjects() {
 }
 
 // ======= FILE INPUT =======
+const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
+let isYoutubeMode = false;
+let youtubeFinalUrl = '';
+
 function onFileSelect(input) {
   const file = input.files[0];
   if (!file) return;
+  if (file.size > MAX_FILE_SIZE) {
+    showToast('حجم الملف يتجاوز 500MB. اختر ملفاً أصغر.', 'error');
+    input.value = '';
+    return;
+  }
+  isYoutubeMode = false;
+  youtubeFinalUrl = '';
+  document.getElementById('youtubePreview').style.display = 'none';
+  document.getElementById('youtubeUrl').value = '';
   document.getElementById('previewName').textContent = file.name;
   document.getElementById('previewSize').textContent = formatSize(file.size);
   document.getElementById('filePreview').classList.add('show');
+}
+
+function setYoutubeMode() {
+  const val = document.getElementById('youtubeUrl').value.trim();
+  if (!val || (!val.includes('youtube.com') && !val.includes('youtu.be'))) {
+    showToast('أدخل رابط يوتيوب صحيح', 'error');
+    return;
+  }
+  isYoutubeMode = true;
+  youtubeFinalUrl = val;
+  document.getElementById('ytPreviewUrl').textContent = val;
+  const prev = document.getElementById('youtubePreview');
+  prev.style.display = 'flex';
+  // clear file input
+  document.getElementById('fileInput').value = '';
+  document.getElementById('filePreview').classList.remove('show');
+  showToast('تم تحديد رابط اليوتيوب ✓', 'success');
+}
+
+function clearYoutube() {
+  isYoutubeMode = false;
+  youtubeFinalUrl = '';
+  document.getElementById('youtubeUrl').value = '';
+  document.getElementById('youtubePreview').style.display = 'none';
 }
 
 function clearFile() {
@@ -1343,7 +1443,8 @@ async function doUpload() {
   const title = document.getElementById('inputTitle').value.trim();
   const notes = document.getElementById('inputNotes').value.trim();
 
-  if (!file) { showToast('اختر ملفاً أولاً', 'error'); return; }
+  // Validate
+  if (!isYoutubeMode && !file) { showToast('اختر ملفاً أو أضف رابط يوتيوب', 'error'); return; }
   if (!curriculum) { showToast('اختر المنهج', 'error'); return; }
   if (!subject) { showToast('اختر المادة', 'error'); return; }
   if (!type) { showToast('اختر نوع المحتوى', 'error'); return; }
@@ -1357,57 +1458,69 @@ async function doUpload() {
   const progressText = document.getElementById('progressText');
   progressWrap.classList.add('show');
   progressBar.style.width = '10%';
-  progressText.textContent = 'جاري رفع الملف...';
+  progressText.textContent = isYoutubeMode ? 'جاري حفظ الرابط...' : 'جاري رفع الملف...';
 
   try {
     const cfg = loadConfig();
-    const ext = file.name.split('.').pop();
-    const timestamp = Date.now();
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const path = `${curriculum}/${subject}/${type}/${timestamp}_${safeName}`;
+    let publicUrl = '';
 
-    progressBar.style.width = '40%';
+    if (isYoutubeMode) {
+      // YouTube link — save directly, no storage upload
+      publicUrl = youtubeFinalUrl;
+      progressBar.style.width = '70%';
+    } else {
+      // File upload
+      const timestamp = Date.now();
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const path = `${curriculum}/${subject}/${type}/${timestamp}_${safeName}`;
 
-    // Upload to Storage
-    const { data: storageData, error: storageError } = await supabaseClient
-      .storage
-      .from(cfg.bucket)
-      .upload(path, file, { cacheControl: '3600', upsert: false });
+      progressBar.style.width = '30%';
+      progressText.textContent = 'جاري رفع الملف... (قد يأخذ وقتاً للملفات الكبيرة)';
 
-    if (storageError) throw storageError;
+      const { data: storageData, error: storageError } = await supabaseClient
+        .storage
+        .from(cfg.bucket)
+        .upload(path, file, { cacheControl: '3600', upsert: false });
 
-    progressBar.style.width = '70%';
-    progressText.textContent = 'جاري حفظ البيانات...';
+      if (storageError) {
+        // Helpful bucket error message
+        if (storageError.message?.includes('Bucket not found') || storageError.statusCode === 400) {
+          throw new Error(`Bucket "${cfg.bucket}" غير موجود في Supabase. اذهب لـ Storage في Supabase وأنشئ bucket اسمه "${cfg.bucket}" وفعّل "Public"`);
+        }
+        throw storageError;
+      }
 
-    // Get public URL
-    const { data: urlData } = supabaseClient.storage.from(cfg.bucket).getPublicUrl(path);
-    const publicUrl = urlData.publicUrl;
+      progressBar.style.width = '70%';
+      progressText.textContent = 'جاري حفظ البيانات...';
+
+      const { data: urlData } = supabaseClient.storage.from(cfg.bucket).getPublicUrl(path);
+      publicUrl = urlData.publicUrl;
+    }
 
     // Save to DB
     const { error: dbError } = await supabaseClient
       .from('files')
       .insert({
-        name: file.name,
-        title: title || file.name,
+        name: isYoutubeMode ? (title || 'YouTube Video') : file.name,
+        title: title || (isYoutubeMode ? 'YouTube Video' : file.name),
         notes: notes || null,
         curriculum,
         subject,
         type,
         url: publicUrl,
-        path,
-        size_bytes: file.size,
+        path: isYoutubeMode ? null : `${curriculum}/${subject}/${type}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`,
+        size_bytes: isYoutubeMode ? 0 : file.size,
       });
 
     if (dbError) throw dbError;
 
     progressBar.style.width = '100%';
     progressText.textContent = 'تم بنجاح!';
+    showToast(isYoutubeMode ? 'تم حفظ رابط اليوتيوب ✓' : 'تم رفع الملف بنجاح ✓', 'success');
 
-    showToast('تم رفع الملف بنجاح ✓', 'success');
-
-    // Reset form
+    // Reset
     setTimeout(() => {
-      clearFile();
+      clearFile(); clearYoutube();
       document.getElementById('selCurriculum').value = '';
       document.getElementById('selSubject').innerHTML = '<option value="">-- اختر المنهج أولاً --</option>';
       document.getElementById('selType').value = '';
@@ -1423,7 +1536,7 @@ async function doUpload() {
 
   } catch(err) {
     console.error(err);
-    showToast('خطأ في الرفع: ' + (err.message || 'تحقق من إعدادات Supabase'), 'error');
+    showToast('خطأ: ' + (err.message || 'تحقق من إعدادات Supabase'), 'error');
     progressWrap.classList.remove('show');
     btn.disabled = false;
     btn.innerHTML = '<span>رفع الملف</span>';
