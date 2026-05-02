@@ -9,6 +9,7 @@ const translations = {
     nav_home: "الرئيسية",
     nav_subjects: "الأقسام",
     nav_about: "عن المنصة",
+    hero_name: "ألند",
     hero_subtitle: "منصة ألند التعليمية",
     hero_desc: "في منصة ألند، لا نقدّم مجرد محتوى تعليمي… بل نصنع فرصة، ونبني مستقبلًا. نحن هنا لنكسر كل الحواجز التي تعيق الطالب، ونحوّل الفوضى التعليمية إلى طريق واضح نحو النجاح.",
     hero_btn: "ابدأ الآن",
@@ -17,6 +18,11 @@ const translations = {
     stat_free: "مجاناً بالكامل",
     sec_subjects: "الأقسام الدراسية",
     sec_subjects_sub: "اختر المادة التي تريد دراستها",
+    curr_badini_title: "صف 9",
+    curr_badini_desc: "منهاج كردي باديني",
+    curr_arabic_title: "صف 9",
+    curr_arabic_desc: "المنهاج العربي",
+    btn_back_curriculum: "← العودة لاختيار المنهاج",
     subj_science: "العلوم",
     subj_math: "الرياضيات",
     subj_kurdish: "اللغة الكوردية",
@@ -73,6 +79,7 @@ const translations = {
     nav_home: "سەرەکی",
     nav_subjects: "بەشەکان",
     nav_about: "دەربارەی پلاتفۆرم",
+    hero_name: "ئەلند",
     hero_subtitle: "پلاتفۆرمی پەروەردەیی ئەلند",
     hero_desc: "لە پلاتفۆرمی ئەلند، ئێمە تەنها ناوەڕۆکی پەروەردەیی دابین ناکەین... دەرفەت دروست دەکەین و داهاتوویەک بنیات دەنێین. ئێمە لێرەین بۆ ئەوەی هەموو ئەو بەربەستانە بشکێنین کە ڕێگری لە خوێندکار دەکەن و ئاژاوەی پەروەردەیی بگۆڕین بۆ ڕێگایەکی ڕوون بۆ سەرکەوتن.",
     hero_btn: "دەستت پێ بکە",
@@ -81,6 +88,11 @@ const translations = {
     stat_free: "بەتەواوی خۆڕایی",
     sec_subjects: "بەشەکانی خوێندن",
     sec_subjects_sub: "بابەتەکە هەڵبژێرە",
+    curr_badini_title: "بۆلا 9",
+    curr_badini_desc: "منهاجی کوردی بادینی",
+    curr_arabic_title: "بۆلا 9",
+    curr_arabic_desc: "منهاجی عەرەبی",
+    btn_back_curriculum: "← گەڕانەوە بۆ هەڵبژاردنی منهاج",
     subj_science: "زانست",
     subj_math: "بیرکاری",
     subj_kurdish: "زمانی کوردی",
@@ -137,6 +149,7 @@ const translations = {
     nav_home: "سەرەتا",
     nav_subjects: "بەشەکان",
     nav_about: "دەربارەی پلاتفۆرم",
+    hero_name: "ئەلند",
     hero_subtitle: "پلاتفۆرمی پەروەردەیی ئەلەند",
     hero_desc: "لە پلاتفۆرمی ئەلەند، ئێمە تەنها ناوەرۆکی پەروەردەیی دانادەین... دەرفەت دروست دەکەین و داهاتوویەک ئاوەدان دەکەین. ئێمە لینەوە بۆ ئەوەی هەموو ئەو بەربەستانە بشکێنین کە ڕێگری لە قوتابی دەکەن و ئاژاوەی پەروەردەیی بگوهەرین بۆ ڕێگایەکی ڕوون بۆ سەرکەوتن.",
     hero_btn: "دەست پێبکە",
@@ -145,6 +158,11 @@ const translations = {
     stat_free: "بە تەواوی خۆڕایی",
     sec_subjects: "بەشەکانی خوێندن",
     sec_subjects_sub: "بابەتەکە هەڵبژێرە",
+    curr_badini_title: "بۆلا 9",
+    curr_badini_desc: "منهاجی کوردی بادینی",
+    curr_arabic_title: "صف 9",
+    curr_arabic_desc: "منهاجی عەرەبی",
+    btn_back_curriculum: "← گەڕانەوە بۆ هەڵبژاردنی منهاج",
     subj_science: "زانست",
     subj_math: "بیرکاری",
     subj_kurdish: "زمانی کوردی",
@@ -196,20 +214,27 @@ const translations = {
 };
 
 // ===== Language Manager =====
+const VALID_LANGS = ['ar', 'ku', 'ba'];
+
 const LangManager = {
-  current: localStorage.getItem('alend_lang') || 'ku',
+  current: VALID_LANGS.includes(localStorage.getItem('alend_lang')) ? localStorage.getItem('alend_lang') : 'ku',
 
   get(key) {
     return translations[this.current][key] || translations['ku'][key] || key;
   },
 
   set(lang) {
-    this.current = lang;
-    localStorage.setItem('alend_lang', lang);
+    this.current = VALID_LANGS.includes(lang) ? lang : 'ku';
+    localStorage.setItem('alend_lang', this.current);
     this.apply();
   },
 
   apply() {
+    if (!VALID_LANGS.includes(this.current) || !translations[this.current]) {
+      this.current = 'ku';
+      localStorage.setItem('alend_lang', 'ku');
+    }
+
     const t = translations[this.current];
     document.documentElement.lang = t.lang;
     document.documentElement.dir = t.dir;
@@ -233,6 +258,10 @@ const LangManager = {
   },
 
   init() {
+    if (!VALID_LANGS.includes(this.current)) {
+      this.current = 'ku';
+      localStorage.setItem('alend_lang', 'ku');
+    }
     this.apply();
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', () => this.set(btn.dataset.lang));

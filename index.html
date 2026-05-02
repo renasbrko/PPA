@@ -32,7 +32,7 @@
       <!-- Language Switcher -->
       <div class="lang-switcher">
         <button class="lang-btn active" data-lang-btn data-lang="ku">کو</button>
-        <button class="lang-btn" data-lang-btn data-lang="ba">با</button>
+        <!-- <button class="lang-btn" data-lang-btn data-lang="ba">با</button> -->
         <button class="lang-btn" data-lang-btn data-lang="ar">عر</button>
       </div>
 
@@ -57,8 +57,8 @@
         🎓 <span data-lang="hero_subtitle">پلاتفۆرمی پەروەردەیی ئەلند</span>
       </div>
 
-      <h1 class="hero-title">
-        ئەلند <span>Alend</span>
+      <h1 class="hero-title" data-lang="hero_name">
+        ئەلند
       </h1>
 
       <p class="hero-subtitle" data-lang="hero_subtitle">پلاتفۆرمی پەروەردەیی ئەلند</p>
@@ -107,62 +107,20 @@
       <p class="section-subtitle" data-lang="sec_subjects_sub">بابەتەکە هەڵبژێرە</p>
     </div>
 
-    <div class="subjects-grid">
-      <div class="subject-card fade-up" onclick="goToSubject('science')">
-        <div class="subject-icon">🔬</div>
-        <div class="subject-name" data-lang="subj_science">زانست</div>
-        <div class="subject-desc" data-lang="subj_science_desc">کتێب، ڕوونکردنەوە، وەزارەتی</div>
+    <div class="subjects-grid curriculum-grid">
+      <div class="subject-card curriculum-card fade-up" onclick="goToCurriculum('badini')">
+        <div class="subject-icon">📘</div>
+        <div class="subject-name" data-lang="curr_badini_title">بۆلا 9</div>
+        <div class="subject-desc" data-lang="curr_badini_desc">منهاجی کوردی بادینی</div>
         <div class="subject-arrow">◀</div>
       </div>
 
-      <div class="subject-card fade-up fade-up-2" onclick="goToSubject('math')">
-        <div class="subject-icon">📐</div>
-        <div class="subject-name" data-lang="subj_math">بیرکاری</div>
-        <div class="subject-desc" data-lang="subj_math_desc">کتێب، ڕوونکردنەوە، وەزارەتی</div>
+      <div class="subject-card curriculum-card fade-up fade-up-2" onclick="goToCurriculum('arabic')">
+        <div class="subject-icon">📙</div>
+        <div class="subject-name" data-lang="curr_arabic_title">صف 9</div>
+        <div class="subject-desc" data-lang="curr_arabic_desc">المنهاج العربي</div>
         <div class="subject-arrow">◀</div>
       </div>
-
-      <div class="subject-card fade-up fade-up-3" onclick="goToSubject('kurdish')">
-        <div class="subject-icon">📖</div>
-        <div class="subject-name" data-lang="subj_kurdish">زمانی کوردی</div>
-        <div class="subject-desc" data-lang="subj_kurdish_desc">کتێب، ڕوونکردنەوە، وەزارەتی</div>
-        <div class="subject-arrow">◀</div>
-      </div>
-
-      <div class="subject-card fade-up fade-up-4" onclick="goToSubject('arabic')">
-        <div class="subject-icon">✍️</div>
-        <div class="subject-name" data-lang="subj_arabic">زمانی عەرەبی</div>
-        <div class="subject-desc" data-lang="subj_arabic_desc">کتێب، ڕوونکردنەوە، وەزارەتی</div>
-        <div class="subject-arrow">◀</div>
-      </div>
-
-      <div class="subject-card fade-up" onclick="goToSubject('social')">
-        <div class="subject-icon">🌍</div>
-        <div class="subject-name" data-lang="subj_social">کۆمەڵایەتی</div>
-        <div class="subject-desc" data-lang="subj_social_desc">کتێب، ڕوونکردنەوە، وەزارەتی</div>
-        <div class="subject-arrow">◀</div>
-      </div>
-
-      <div class="subject-card fade-up fade-up-2" onclick="goToSubject('islam')">
-        <div class="subject-icon">🌙</div>
-        <div class="subject-name" data-lang="subj_islam">پەروەردەی ئیسلامی</div>
-        <div class="subject-desc" data-lang="subj_islam_desc">کتێب، پرسیار، وەزارەتی</div>
-        <div class="subject-arrow">◀</div>
-      </div>
-
-      <div class="subject-card fade-up fade-up-3" onclick="goToSubject('english')">
-        <div class="subject-icon">🌐</div>
-        <div class="subject-name" data-lang="subj_english">زمانی ئینگلیزی</div>
-        <div class="subject-desc" data-lang="subj_english_desc">کتێب، ڕوونکردنەوە، وەزارەتی</div>
-        <div class="subject-arrow">◀</div>
-      </div>
-
-      <!-- <div class="subject-card fade-up fade-up-4" onclick="goToSubject('average')">
-        <div class="subject-icon">📊</div>
-        <div class="subject-name" data-lang="subj_average">تێکڕای نمرە</div>
-        <div class="subject-desc" data-lang="subj_average_desc">ژمارەکردنی تێکڕای نمرە</div>
-        <div class="subject-arrow">◀</div>
-      </div> -->
     </div>
   </div>
 </section>
@@ -212,15 +170,18 @@
 
 <!-- ===== FOOTER ===== -->
 <footer class="site-footer">
-  © 2025 <span>PPAlend </span> – <span data-lang="footer_rights">هەموو مافەکان پارێزراون</span>
+  © 2026 <span>PPAlend </span> – <span data-lang="footer_rights">هەموو مافەکان پارێزراون</span>
 </footer>
 
 <script src="js/lang.js"></script>
 <script src="js/theme.js"></script>
 <script>
-  function goToSubject(subj) {
-    const lang = LangManager.current;
-    window.location.href = `subjects/${subj}.html?lang=${lang}`;
+  function goToCurriculum(curriculum) {
+    const lang = ['ku', 'ba', 'ar'].includes(LangManager.current) ? LangManager.current : 'ku';
+    const route = curriculum === 'arabic'
+      ? 'subjects/menhej/mnarabic.html'
+      : 'subjects/menhej/mnbadini.html';
+    window.location.href = `${route}?lang=${lang}`;
   }
 
   function updateThemeIcon() {

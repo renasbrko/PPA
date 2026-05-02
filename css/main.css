@@ -1,4 +1,4 @@
-/* ===== STS GROUP - Professional Design System ===== */
+/* ===== PPAlend - Professional Design System ===== */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
 
 /* ===== CSS Variables ===== */
@@ -419,6 +419,32 @@ a { text-decoration: none; color: inherit; }
   gap: 1.25rem;
 }
 
+.curriculum-grid {
+  grid-template-columns: repeat(2, minmax(280px, 340px));
+  justify-content: center;
+  align-items: stretch;
+  margin: 0 auto;
+}
+
+.curriculum-card {
+  min-height: 250px;
+  padding: 2.25rem 1.5rem;
+}
+
+.curriculum-card .subject-icon {
+  width: 64px;
+  height: 64px;
+  font-size: 1.8rem;
+}
+
+.curriculum-card .subject-name {
+  font-size: 1.2rem;
+}
+
+.curriculum-card .subject-desc {
+  font-size: 0.95rem;
+}
+
 .subject-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -737,4 +763,6 @@ a { text-decoration: none; color: inherit; }
   .about-card { padding: 1.75rem 1.25rem; }
 
   .subjects-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .curriculum-grid { grid-template-columns: 1fr; max-width: 380px; }
+  .curriculum-card { min-height: 220px; }
 }
