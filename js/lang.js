@@ -70,6 +70,23 @@ const translations = {
     subj_page_islam: "قسم التربية الإسلامية",
     subj_page_english: "قسم اللغة الإنجليزية",
     subj_page_average: "المعدلات",
+    footer_brand_title: "منصة ألند التعليمية",
+    footer_brand_desc: "منصة تعليمية حديثة لتقديم محتوى دراسي منظم وسريع الوصول.",
+    footer_links_title: "الروابط",
+    footer_contact_title: "التواصل",
+    footer_newsletter_title: "النشرة البريدية",
+    footer_nav_home: "الرئيسية",
+    footer_nav_subjects: "الأقسام",
+    footer_nav_about: "عن المنصة",
+    footer_nav_login: "تسجيل الدخول",
+    footer_newsletter_placeholder: "بريدك الإلكتروني",
+    footer_newsletter_btn: "اشتراك",
+    footer_contact_email: "📧 support@ppalend.com",
+    footer_contact_region: "📍 كردستان العراق",
+    footer_social_facebook: "فيسبوك",
+    footer_social_instagram: "إنستغرام",
+    footer_social_youtube: "يوتيوب",
+    footer_social_telegram: "تيليغرام"
   },
 
   ku: {
@@ -140,6 +157,23 @@ const translations = {
     subj_page_islam: "بەشی پەروەردەی ئیسلامی",
     subj_page_english: "بەشی زمانی ئینگلیزی",
     subj_page_average: "تێکڕای نمرە",
+    footer_brand_title: "پلاتفۆرمی پەروەردەیی ئەلند",
+    footer_brand_desc: "پلاتفۆرمێکی مۆدێرن بۆ پێشکەشکردنی ناوەڕۆکی خوێندنی ڕێکخراو و خێرا.",
+    footer_links_title: "بەستەرەکان",
+    footer_contact_title: "پەیوەندی",
+    footer_newsletter_title: "نامەی هەواڵ",
+    footer_nav_home: "سەرەکی",
+    footer_nav_subjects: "بەشەکان",
+    footer_nav_about: "دەربارە",
+    footer_nav_login: "چوونەژوورەوە",
+    footer_newsletter_placeholder: "ئیمەیڵەکەت",
+    footer_newsletter_btn: "تۆمار",
+    footer_contact_email: "📧 support@ppalend.com",
+    footer_contact_region: "📍 هەرێمی کوردستان — عێراق",
+    footer_social_facebook: "فەیسبووک",
+    footer_social_instagram: "ئینستاگرام",
+    footer_social_youtube: "یوتیوب",
+    footer_social_telegram: "تێلێگرام"
   },
 
   ba: {
@@ -210,6 +244,23 @@ const translations = {
     subj_page_islam: "بەشی پەروەردەی ئیسلامی",
     subj_page_english: "بەشی زمانی ئینگلیزی",
     subj_page_average: "تێکڕای نمرە",
+    footer_brand_title: "پلاتفۆرمی پەروەردەیی ئەلەند",
+    footer_brand_desc: "پلاتفۆرمێکی مۆدێرن بۆ پێشکەشکردنی ناوەرۆکی خوێندنی ڕێکخراو و خێرا.",
+    footer_links_title: "بەستەرەکان",
+    footer_contact_title: "پەیوەندی",
+    footer_newsletter_title: "نامەی هەواڵ",
+    footer_nav_home: "سەرەتا",
+    footer_nav_subjects: "بەشەکان",
+    footer_nav_about: "دەربارە",
+    footer_nav_login: "چوونەژوورەوە",
+    footer_newsletter_placeholder: "ئیمەیڵەکەت",
+    footer_newsletter_btn: "تۆمار",
+    footer_contact_email: "📧 support@ppalend.com",
+    footer_contact_region: "📍 کوردستان — عێراق",
+    footer_social_facebook: "فەیسبووک",
+    footer_social_instagram: "ئینستاگرام",
+    footer_social_youtube: "یوتیوب",
+    footer_social_telegram: "تێلێگرام"
   }
 };
 
@@ -249,6 +300,15 @@ const LangManager = {
     document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
       const key = el.getAttribute('data-lang-placeholder');
       el.placeholder = this.get(key);
+    });
+
+    document.querySelectorAll('[data-lang-attr]').forEach(el => {
+      const spec = el.getAttribute('data-lang-attr');
+      if (!spec) return;
+      spec.split(/\s+/).forEach((pair) => {
+        const [attr, key] = pair.split(":");
+        if (attr && key) el.setAttribute(attr, this.get(key));
+      });
     });
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
