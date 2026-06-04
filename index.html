@@ -29,10 +29,11 @@
 
     <!-- Controls -->
     <div class="header-controls">
+      <a href="login.html" id="authActionBtn" class="hero-btn" style="padding:0.45rem 0.9rem;font-size:0.85rem;" data-lang="footer_nav_login">Login</a>
       <!-- Language Switcher -->
       <div class="lang-switcher">
         <button class="lang-btn active" data-lang-btn data-lang="ku">کو</button>
-        <!-- <button class="lang-btn" data-lang-btn data-lang="ba">با</button> -->
+        <button class="lang-btn" data-lang-btn data-lang="ba">با</button>
         <button class="lang-btn" data-lang-btn data-lang="ar">عر</button>
       </div>
 
@@ -175,7 +176,30 @@
 
 <script src="js/lang.js"></script>
 <script src="js/theme.js"></script>
+<script src="js/env.js"></script>
+<script src="js/supabase-auth.js"></script>
 <script>
+  async function refreshAuthAction() {
+    if (!window.AlendAuth) return;
+    await window.AlendAuth.init();
+    const session = await window.AlendAuth.getSession();
+    const btn = document.getElementById('authActionBtn');
+    if (!btn) return;
+
+    if (session?.user) {
+      btn.textContent = 'Logout';
+      btn.href = '#';
+      btn.onclick = async (e) => {
+        e.preventDefault();
+        await window.AlendAuth.signOut();
+      };
+    } else {
+      btn.textContent = 'Login';
+      btn.href = 'login.html';
+      btn.onclick = null;
+    }
+  }
+
   function goToCurriculum(curriculum) {
     const lang = ['ku', 'ba', 'ar'].includes(LangManager.current) ? LangManager.current : 'ku';
     const route = curriculum === 'arabic'
@@ -206,6 +230,7 @@
   });
 
   LangManager.init();
+  refreshAuthAction();
 </script>
 </body>
 </html>

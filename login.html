@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>چوونەژوورەوە | PPAlend</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <style>
+    :root {
+      --bg: #051120;
+      --bg-soft: #0a192f;
+      --card: rgba(10, 25, 47, 0.96);
+      --border: rgba(255, 255, 255, 0.1);
+      --gold: #c9a24d;
+      --gold-light: #e0ba6d;
+      --text: #e8f0fb;
+      --muted: #8fa8c5;
+      --danger: #ff8a8a;
+      --success: #86efac;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Cairo", "Noto Naskh Arabic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 1.25rem;
+      overflow-x: hidden;
+      direction: rtl;
+      text-align: right;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(201, 162, 77, 0.1), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(24, 63, 115, 0.35), transparent 42%),
+        linear-gradient(160deg, var(--bg), var(--bg-soft));
+      z-index: -1;
+    }
+    @keyframes card-rise {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .card {
+      width: 100%;
+      max-width: 440px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      padding: 1.5rem 1.35rem 1.35rem;
+      box-shadow:
+        0 6px 6px rgba(0, 0, 0, 0.18),
+        0 28px 60px rgba(0, 0, 0, 0.52),
+        0 0 0 1px rgba(201, 162, 77, 0.06) inset;
+      backdrop-filter: blur(10px);
+      animation: card-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .card-head {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0.45rem;
+    }
+    .logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      box-shadow: 0 8px 22px rgba(201, 162, 77, 0.22);
+    }
+    .welcome {
+      margin: 0.35rem 0 0.15rem;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      text-align: center;
+    }
+    .subtitle {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+      text-align: center;
+      line-height: 1.65;
+    }
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      padding: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    .auth-tab {
+      border: none;
+      border-radius: 0.55rem;
+      padding: 0.5rem 0.65rem;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+    .auth-tab.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #0d1f35;
+      box-shadow: 0 4px 14px rgba(201, 162, 77, 0.35);
+    }
+    .auth-tab:not(.active):hover {
+      color: var(--text);
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .field {
+      margin-bottom: 0.65rem;
+    }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+    .field input {
+      width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(5, 17, 32, 0.65);
+      color: var(--text);
+      padding: 0.72rem 0.85rem;
+      font: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .field input::placeholder {
+      color: rgba(143, 168, 197, 0.65);
+    }
+    .field input:focus {
+      border-color: rgba(201, 162, 77, 0.55);
+      box-shadow: 0 0 0 2px rgba(201, 162, 77, 0.12);
+    }
+    .field-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+      line-height: 1.4;
+    }
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #0d1f35;
+      padding: 0.82rem 1rem;
+      cursor: pointer;
+      margin-top: 0.35rem;
+      font-weight: 800;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+      box-shadow: 0 10px 24px rgba(201, 162, 77, 0.28);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+      box-shadow: 0 14px 30px rgba(201, 162, 77, 0.35);
+    }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .forgot {
+      display: block;
+      text-align: left;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--gold);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      padding: 0;
+    }
+    .forgot:hover { text-decoration: underline; }
+    .error {
+      color: var(--danger);
+      font-size: 0.84rem;
+      min-height: 1.35rem;
+      margin-top: 0.65rem;
+      text-align: center;
+      line-height: 1.45;
+    }
+    .success {
+      color: var(--success);
+      font-size: 0.84rem;
+      margin-top: 0.65rem;
+      text-align: center;
+      line-height: 1.45;
+    }
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.85rem;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .back-home {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .back-home a {
+      color: var(--gold);
+      font-weight: 700;
+    }
+    @media (max-width: 480px) {
+      body { padding: 1rem 0.85rem; align-content: center; }
+      .card { padding: 1.2rem 1rem 1.1rem; max-width: 100%; }
+      .welcome { font-size: 1.15rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="card-head">
+      <div style="display:flex;justify-content:flex-start;margin-bottom:0.25rem;gap:0.4rem;flex-wrap:wrap">
+        <button type="button" id="langKu" class="auth-tab" style="grid-column:unset;width:auto;padding:0.35rem 0.6rem;font-size:0.78rem">کوردی</button>
+        <button type="button" id="langBa" class="auth-tab" style="grid-column:unset;width:auto;padding:0.35rem 0.6rem;font-size:0.78rem">بادینی</button>
+        <button type="button" id="langAr" class="auth-tab" style="grid-column:unset;width:auto;padding:0.35rem 0.6rem;font-size:0.78rem">العربية</button>
+      </div>
+      <div class="logo-wrap">
+        <img src="logo.png" alt="ئەلەند" class="logo">
+      </div>
+      <p class="welcome" data-i18n="welcome">بەخێربێیتەوە</p>
+      <p class="subtitle" data-i18n="subtitle">پلاتفۆرمی پەروەردەیی ئەلند — چوونەژوورەوە یان تۆمارکردن بە ئیمەیڵ و تێپەڕەوشە.</p>
+    </div>
+
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="auth-tab active" id="tabLogin" role="tab" aria-selected="true" data-i18n="tab_login">چوونەژوورەوە</button>
+      <button type="button" class="auth-tab" id="tabRegister" role="tab" aria-selected="false" data-i18n="tab_register">تۆمارکردن</button>
+    </div>
+
+    <div id="panelLogin" class="panel active" role="tabpanel">
+      <form id="formLogin" novalidate>
+        <div class="field">
+          <label for="loginEmail" data-i18n="label_email">ئیمەیڵ</label>
+          <input id="loginEmail" type="email" autocomplete="email" required placeholder="name@example.com" data-i18n-placeholder="ph_email">
+        </div>
+        <div class="field">
+          <label for="loginPassword" data-i18n="label_password">تێپەڕەوشە</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••" data-i18n-placeholder="ph_password">
+        </div>
+        <button type="submit" class="btn" id="btnLogin" data-i18n="btn_login">چوونەژوورەوە</button>
+      </form>
+    </div>
+
+    <div id="panelRegister" class="panel" role="tabpanel" hidden>
+      <form id="formRegister" novalidate>
+        <div class="field">
+          <label for="regName" data-i18n="label_fullname">ناوی تەواو</label>
+          <input id="regName" type="text" autocomplete="name" required placeholder="ناوی تەواو" minlength="2" data-i18n-placeholder="ph_fullname">
+        </div>
+        <div class="field">
+          <label for="regEmail" data-i18n="label_email">ئیمەیڵ</label>
+          <input id="regEmail" type="email" autocomplete="email" required placeholder="name@example.com" data-i18n-placeholder="ph_email">
+        </div>
+        <div class="field">
+          <label for="regPhone" data-i18n="label_phone">ژمارەی مۆبایل</label>
+          <input id="regPhone" type="tel" autocomplete="tel" required placeholder="+9647XXXXXXXX" data-i18n-placeholder="ph_phone">
+          <p class="field-hint" data-i18n="hint_phone">10–15 ژمارە؛ دەتوانێت + لە سەرەتادا بێت.</p>
+        </div>
+        <div class="field">
+          <label for="regPassword" data-i18n="label_password">تێپەڕەوشە</label>
+          <input id="regPassword" type="password" autocomplete="new-password" required placeholder="••••••••" data-i18n-placeholder="ph_password">
+          <p class="field-hint" data-i18n="hint_password">لانیکەم 8 پیت، پیتی گەورە و بچووک، و ژمارە.</p>
+        </div>
+        <div class="field">
+          <label for="regPassword2" data-i18n="label_password2">دووبارەکردنەوەی تێپەڕەوشە</label>
+          <input id="regPassword2" type="password" autocomplete="new-password" required placeholder="••••••••" data-i18n-placeholder="ph_password">
+        </div>
+        <button type="submit" class="btn" id="btnRegister" data-i18n="btn_register">تۆمارکردن</button>
+      </form>
+    </div>
+
+    <div class="error" id="authError" aria-live="polite"></div>
+    <div class="success" id="authSuccess" aria-live="polite"></div>
+    <p class="hint" data-i18n="hint_access">ناوەڕۆکی پەروەردەیی تەنها دوای چوونەژوورەوە دەبێتە بەردەست.</p>
+    <p class="back-home"><a href="index.html" data-i18n="back_home">← گەڕانەوە بۆ سەرەکی</a></p>
+  </main>
+
+  <script src="js/env.js"></script>
+  <script src="js/supabase-auth.js"></script>
+  <script>
+    (function () {
+      const errEl = document.getElementById("authError");
+      const okEl = document.getElementById("authSuccess");
+      const tabLogin = document.getElementById("tabLogin");
+      const tabRegister = document.getElementById("tabRegister");
+      const panelLogin = document.getElementById("panelLogin");
+      const panelRegister = document.getElementById("panelRegister");
+      const langKu = document.getElementById("langKu");
+      const langBa = document.getElementById("langBa");
+      const langAr = document.getElementById("langAr");
+
+      const i18n = {
+        ku: {
+          err_unknown: "هەڵە.",
+          welcome: "بەخێربێیتەوە",
+          subtitle: "پلاتفۆرمی پەروەردەیی ئەلند — چوونەژوورەوە یان تۆمارکردن بە ئیمەیڵ و تێپەڕەوشە.",
+          tab_login: "چوونەژوورەوە",
+          tab_register: "تۆمارکردن",
+          label_email: "ئیمەیڵ",
+          label_password: "تێپەڕەوشە",
+          label_fullname: "ناوی تەواو",
+          label_phone: "ژمارەی مۆبایل",
+          label_password2: "دووبارەکردنەوەی تێپەڕەوشە",
+          btn_login: "چوونەژوورەوە",
+          btn_register: "تۆمارکردن",
+          ph_email: "name@example.com",
+          ph_password: "••••••••",
+          ph_fullname: "ناوی تەواو",
+          ph_phone: "+9647XXXXXXXX",
+          hint_phone: "10–15 ژمارە؛ دەتوانێت + لە سەرەتادا بێت.",
+          hint_password: "لانیکەم 8 پیت، پیتی گەورە و بچووک، و ژمارە.",
+          hint_access: "ناوەڕۆکی پەروەردەیی تەنها دوای چوونەژوورەوە دەبێتە بەردەست.",
+          back_home: "← گەڕانەوە بۆ سەرەکی",
+          msg_need_config: "ڕێکخستنی Supabase تەواو نییە. تکایە `js/env.js` ڕاست بکە.",
+          msg_password_mismatch: "تێپەڕەوشەکان یەک ناگرنەوە.",
+          msg_register_ok: "تۆمارکردن سەرکەوتوو بوو. ئێستا دەتوانیت بچیتە ژوورەوە."
+        },
+        ba: {
+          err_unknown: "هەڵە.",
+          welcome: "بەخێربێیتەوە",
+          subtitle: "پلاتفۆرمی پەروەردەیی ئەلند — چوونەژوورەوە یان تۆمارکردن بە ئیمەیڵ و تێپەڕەوشە.",
+          tab_login: "چوونەژوورەوە",
+          tab_register: "تۆمارکردن",
+          label_email: "ئیمەیڵ",
+          label_password: "تێپەڕەوشە",
+          label_fullname: "ناوی تەواو",
+          label_phone: "ژمارەی مۆبایل",
+          label_password2: "دووبارەکردنەوەی تێپەڕەوشە",
+          btn_login: "چوونەژوورەوە",
+          btn_register: "تۆمارکردن",
+          ph_email: "name@example.com",
+          ph_password: "••••••••",
+          ph_fullname: "ناوی تەواو",
+          ph_phone: "+9647XXXXXXXX",
+          hint_phone: "10–15 ژمارە؛ دەتوانێت + لە سەرەتادا بێت.",
+          hint_password: "لانیکەم 8 پیت، پیتی گەورە و بچووک، و ژمارە.",
+          hint_access: "ناوەڕۆکی پەروەردەیی تەنها دوای چوونەژوورەوە دەبێتە بەردەست.",
+          back_home: "← گەڕانەوە بۆ سەرەکی",
+          msg_need_config: "ڕێکخستنی Supabase تەواو نییە. تکایە `js/env.js` ڕاست بکە.",
+          msg_password_mismatch: "تێپەڕەوشەکان یەک ناگرنەوە.",
+          msg_register_ok: "تۆمارکردن سەرکەوتوو بوو. ئێستا دەتوانیت بچیتە ژوورەوە."
+        },
+        ar: {
+          err_unknown: "حدث خطأ.",
+          welcome: "مرحباً بك",
+          subtitle: "منصة ألند التعليمية — تسجيل الدخول أو إنشاء حساب بالبريد وكلمة المرور.",
+          tab_login: "تسجيل الدخول",
+          tab_register: "إنشاء حساب",
+          label_email: "البريد الإلكتروني",
+          label_password: "كلمة المرور",
+          label_fullname: "الاسم الكامل",
+          label_phone: "رقم الهاتف",
+          label_password2: "تأكيد كلمة المرور",
+          btn_login: "تسجيل الدخول",
+          btn_register: "إنشاء حساب",
+          ph_email: "name@example.com",
+          ph_password: "••••••••",
+          ph_fullname: "الاسم الكامل",
+          ph_phone: "+9647XXXXXXXX",
+          hint_phone: "10–15 رقمًا ويمكن أن يبدأ بـ +.",
+          hint_password: "8 أحرف على الأقل + حرف كبير وصغير + رقم.",
+          hint_access: "المحتوى التعليمي يصبح متاحاً بعد تسجيل الدخول.",
+          back_home: "← العودة إلى الرئيسية",
+          msg_need_config: "إعدادات Supabase غير مكتملة. عدّل `js/env.js` أولاً.",
+          msg_password_mismatch: "كلمتا المرور غير متطابقتين.",
+          msg_register_ok: "تم إنشاء الحساب بنجاح. يمكنك تسجيل الدخول الآن."
+        }
+      };
+
+      function currentLang() {
+        const raw = (localStorage.getItem("alend_lang") || "ku").toLowerCase();
+        if (raw === "ar") return "ar";
+        if (raw === "ba") return "ba";
+        return "ku";
+      }
+
+      function setLang(lang) {
+        const v = lang === "ar" ? "ar" : lang === "ba" ? "ba" : "ku";
+        localStorage.setItem("alend_lang", v);
+        const tr = i18n[v];
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const k = el.getAttribute("data-i18n");
+          if (k && tr[k]) el.textContent = tr[k];
+        });
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+          const k = el.getAttribute("data-i18n-placeholder");
+          if (k && tr[k]) el.setAttribute("placeholder", tr[k]);
+        });
+        langKu.classList.toggle("active", v === "ku");
+        if (langBa) langBa.classList.toggle("active", v === "ba");
+        langAr.classList.toggle("active", v === "ar");
+        document.documentElement.lang = v === "ar" ? "ar" : "ku";
+        document.documentElement.dir = "rtl";
+      }
+
+      function clearMessages() {
+        errEl.textContent = "";
+        okEl.textContent = "";
+      }
+
+      function setMode(isLogin) {
+        clearMessages();
+        tabLogin.classList.toggle("active", isLogin);
+        tabRegister.classList.toggle("active", !isLogin);
+        tabLogin.setAttribute("aria-selected", isLogin);
+        tabRegister.setAttribute("aria-selected", !isLogin);
+        panelLogin.classList.toggle("active", isLogin);
+        panelRegister.classList.toggle("active", !isLogin);
+        panelRegister.hidden = isLogin;
+      }
+
+      tabLogin.addEventListener("click", () => setMode(true));
+      tabRegister.addEventListener("click", () => setMode(false));
+      langKu.addEventListener("click", () => setLang("ku"));
+      if (langBa) langBa.addEventListener("click", () => setLang("ba"));
+      langAr.addEventListener("click", () => setLang("ar"));
+
+      window.addEventListener("storage", (e) => {
+        if (e.key === "alend_lang") setLang(currentLang());
+      });
+
+      async function boot() {
+        setLang(currentLang());
+        try {
+          await window.AlendAuth.init();
+        } catch (e) {
+          errEl.textContent = (e && e.message) || i18n[currentLang()].msg_need_config;
+          return;
+        }
+
+        const session = await window.AlendAuth.getSession();
+        if (session?.user) {
+          const returnTo = window.AlendAuth.consumeReturnTo?.() || "index.html";
+          window.location.href = returnTo;
+        }
+      }
+
+      document.getElementById("formLogin").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearMessages();
+        const btn = document.getElementById("btnLogin");
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+        btn.disabled = true;
+        const prevText = btn.textContent;
+        btn.textContent = "...";
+        try {
+          await window.AlendAuth.signInWithEmailPassword(email, password);
+          const returnTo = window.AlendAuth.consumeReturnTo?.() || "index.html";
+          window.location.href = returnTo;
+        } catch (error) {
+          errEl.textContent = error.message || i18n[currentLang()].err_unknown || "هەڵە.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = prevText;
+        }
+      });
+
+      document.getElementById("formRegister").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearMessages();
+        const btn = document.getElementById("btnRegister");
+        const fullName = document.getElementById("regName").value;
+        const email = document.getElementById("regEmail").value;
+        const phone = document.getElementById("regPhone").value;
+        const password = document.getElementById("regPassword").value;
+        const password2 = document.getElementById("regPassword2").value;
+
+        if (password !== password2) {
+          errEl.textContent = i18n[currentLang()].msg_password_mismatch;
+          return;
+        }
+
+        btn.disabled = true;
+        const prevText = btn.textContent;
+        btn.textContent = "...";
+        try {
+          const data = await window.AlendAuth.signUpWithEmail({
+            fullName,
+            email,
+            phone,
+            password
+          });
+
+          if (data.session) {
+            const returnTo = window.AlendAuth.consumeReturnTo?.() || "index.html";
+            window.location.href = returnTo;
+            return;
+          }
+
+          okEl.textContent = i18n[currentLang()].msg_register_ok;
+          setMode(true);
+        } catch (error) {
+          errEl.textContent = error.message || i18n[currentLang()].err_unknown || "هەڵە.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = prevText;
+        }
+      });
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
